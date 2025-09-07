@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>فرم گزارش فعالیت لینکدین | دیدار</title>
+
+  <!-- Vazirmatn -->
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --brand:#02AF9E;          /* Didar Green */
+      --brand-600:#079c8e;
+      --brand-faint:#e6faf7;
+      --ink:#0f172a;            /* Slate-900 */
+      --ink-700:#334155;        /* Slate-700 */
+      --muted:#64748b;          /* Slate-500 */
+      --line:#e5e7eb;           /* Gray-200 */
+      --bg:#f8fafc;             /* Slate-50 */
+      --white:#fff;
+      --radius:16px;
+      --shadow:0 10px 30px rgba(2,175,158,.08);
+      --focus:0 0 0 4px rgba(2,175,158,.18);
+    }
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:"Vazirmatn",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 600px at 100% -10%, rgba(2,175,158,.06), transparent 60%),
+        radial-gradient(1000px 500px at -10% 110%, rgba(2,175,158,.05), transparent 60%),
+        var(--bg);
+      padding:28px 20px;   /* دیگه Flex نیست تا ریسپانسیو طبیعی داشته باشیم */
+    }
+
+    .shell{width:min(860px,96vw); margin-inline:auto}
+    .brandbar{
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:8px 12px;
+      margin-bottom:22px; padding:6px 2px;
+    }
+    .brand-left{display:flex; align-items:center; gap:12px; min-width:0; flex:1 1 auto}
+    .brand-title{font-weight:800; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .brand-title strong{color:var(--brand)}
+    .brand-right{font-size:12px; color:var(--muted); margin-inline-start:auto}
+
+    /* لوگو به صورت SVG داخلی؛ همیشه نمایش داده می‌شود */
+    .logo{height:38px; width:auto; display:block; filter: drop-shadow(0 6px 16px rgba(2,175,158,.18))}
+    .logo .mark{rx:10}
+    @media (max-width:520px){
+      .brand-right{flex-basis:100%; order:3}
+    }
+
+    .card{
+      background:var(--white);
+      border:1px solid var(--line); border-radius:var(--radius);
+      box-shadow:var(--shadow); padding:22px 22px 18px;
+    }
+    h1{margin:0 0 8px; font-size:22px; font-weight:800}
+    .subtitle{margin:0 0 18px; color:var(--ink-700); font-size:14px}
+
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px; background:var(--brand-faint); color:var(--brand);
+      font-size:12px; font-weight:700; margin-bottom:10px; border:1px solid rgba(2,175,158,.18);
+    }
+    .badge-dot{width:6px;height:6px;border-radius:50%;background:var(--brand); box-shadow:0 0 0 6px rgba(2,175,158,.12)}
+
+    .grid{display:grid; gap:14px; grid-template-columns:1fr 1fr; margin-bottom:28px}
+    .grid.full{grid-template-columns:1fr; margin-bottom:28px}
+
+    label.field{display:flex; flex-direction:column}
+    .label-text{font-size:13px; margin-bottom:6px}
+    .label-text.req::after{content:" *"; color:#e11d48; font-weight:700}
+
+    input, select, button{font-family:inherit}
+    input, select{
+      appearance:none; outline:none; color:inherit;
+      border:1px solid var(--line); background:#fff; border-radius:12px; padding:11px 12px;
+      transition:border .15s ease, box-shadow .15s ease, transform .04s ease;
+    }
+    input::placeholder{color:#94a3b8}
+    input:focus, select:focus{border-color:var(--brand); box-shadow:var(--focus)}
+
+    /* خوانایی بهتر انتخاب نام‌ها */
+    select{
+      color:var(--ink); background-color:#fff; font-weight:600;
+      border-color:#cbd5e1;
+    }
+    select:invalid{color:#94a3b8; font-weight:400}                 /* Placeholder کم‌رنگ */
+    select option{color:#0f172a}                                   /* آیتم‌ها پررنگ */
+    option[value=""]{color:#94a3b8}
+
+    input[type="number"]{min-width:0}
+    input[type="month"]{padding:10px 12px}
+    .hint{font-size:12px; color:#8a97a7}
+
+    .pre-submit-note{
+      margin:22px 0 14px; font-size:13px; color:var(--ink-700); background:#f1f5f9;
+      border:1px dashed var(--line); border-radius:12px; padding:10px 12px;
+    }
+
+    .actions{margin-top:6px}
+    button{
+      width:100%; padding:13px 14px; border-radius:12px; border:0; cursor:pointer;
+      background:linear-gradient(180deg, var(--brand) 0%, var(--brand-600) 100%);
+      color:white; font-weight:800; letter-spacing:.25px; box-shadow:0 8px 20px rgba(2,175,158,.28);
+      transition:transform .05s ease, filter .18s ease;
+      font-size:16px;
+    }
+    button:hover{filter:brightness(1.02)}
+    button:active{transform:translateY(1px)}
+    button:disabled{opacity:.6; cursor:not-allowed; filter:grayscale(.1)}
+
+    .toast{
+      margin-top:12px; padding:10px 12px; border-radius:12px; font-size:13px; display:none;
+      border:1px solid transparent;
+    }
+    .toast.show{display:block}
+    .toast.success{color:#065f46; background:#ecfdf5; border-color:#a7f3d0}
+    .toast.error{color:#7f1d1d; background:#fef2f2; border-color:#fecaca}
+
+    .footer{
+      margin-top:16px; display:flex; justify-content:center; gap:6px;
+      font-size:12px; color:#94a3b8;
+    }
+    .footer a{color:var(--brand); text-decoration:none}
+    .footer a:hover{text-decoration:underline}
+
+    @media (max-width:780px){ .grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="brandbar" aria-label="Didar brand">
+    <div class="brand-left">
+      <!-- لوگوی داخلی (بدون data: و بدون xmlns اشتباه) -->
+      <svg class="logo" viewBox="0 0 160 40" role="img" aria-label="لوگوی دیدار">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#02AF9E"/><stop offset="1" stop-color="#0BD3C1"/>
+          </linearGradient>
+        </defs>
+        <!-- نشان مربعی برند -->
+        <rect x="0" y="2" width="36" height="36" rx="10" fill="url(#g)" class="mark"/>
+        <rect x="6" y="8" width="24" height="24" rx="8" fill="#fff"/>
+        <!-- تایپوگرافی -->
+        <text x="20" y="27" font-size="18" font-weight="800" fill="#02AF9E"></text>
+      </svg>
+      <div class="brand-title">دیدار | <strong>فرم گزارش لینکدین</strong></div>
+    </div>
+    <div class="brand-right"></div>
+  </div>
+
+  <form id="form" class="card" method="POST"
+        action="https://matinghelichkhani.app.n8n.cloud/webhook/linkedin-report"
+        novalidate>
+    <span class="badge"><span class="badge-dot"></span> ثبت ماهانه عملکرد</span>
+    <h1>گزارش فعالیت لینکدین</h1>
+    <p class="subtitle">لطفاً فرم را کامل کنید؛ برای هر پستی که منتشر کردید این فرم را تکمیل کنید.</p>
+
+    <!-- نام (لیست انتخابی) -->
+    <div class="grid full" role="group" aria-label="انتخاب نام">
+      <label class="field" for="full_name">
+        <span class="label-text req">نام</span>
+        <select id="full_name" name="full_name" required>
+          <option value="" selected disabled>انتخاب کنید…</option>
+          <option>محمدجواد کریمی</option>
+          <option>ایمان بوستان</option>
+          <option>میلاد فخرآبادی</option>
+          <option>هانیه موسی زاده</option>
+          <option>شبنم چاووشی</option>
+          <option>علیرضا  امینی</option>
+          <option>مونا فصاحتی</option>
+          <option>شهره عباسی</option>
+          <option>یاسمن حسینی</option>
+          <option>نشاط کردی</option>
+          <option>حدیث فراهانی</option>
+          <option>حسام هاشمی</option>
+          <option>غزل پوراسدی</option>
+          <option>فروزان الماسی</option>
+          <option>نوید شهلایی</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="grid full" role="group" aria-label="اطلاعات پست">
+      <label class="field" for="post_url">
+        <span class="label-text req">لینک پست لینکدین</span>
+        <input id="post_url" name="post_url" required placeholder="https://www.linkedin.com/posts/..."
+               pattern="https?://(www\.)?linkedin\.com/.+" inputmode="url" aria-describedby="urlHint">
+        <span id="urlHint" class="hint">با <b>https://www.linkedin.com/</b> شروع شود.</span>
+      </label>
+    </div>
+
+    <div class="grid" role="group" aria-label="تعاملات">
+      <label class="field" for="likes">
+        <span class="label-text req">تعداد لایک</span>
+        <input id="likes" name="likes" type="number" inputmode="numeric" min="0" step="1" required placeholder="0">
+      </label>
+      <label class="field" for="comments">
+        <span class="label-text req">تعداد کامنت</span>
+        <input id="comments" name="comments" type="number" inputmode="numeric" min="0" step="1" required placeholder="0">
+      </label>
+    </div>
+
+    <div class="grid" role="group" aria-label="ری‌پست و فالوئر">
+      <label class="field" for="reposts">
+        <span class="label-text req">تعداد ری‌پست</span>
+        <input id="reposts" name="reposts" type="number" inputmode="numeric" min="0" step="1" required placeholder="0">
+      </label>
+      <label class="field" for="followers">
+        <span class="label-text req">تعداد فالوئر</span>
+        <input id="followers" name="followers" type="number" inputmode="numeric" min="0" step="1" required placeholder="مثلاً 2500">
+      </label>
+    </div>
+
+    <div class="grid full" role="group" aria-label="بازه زمانی">
+      <label class="field" for="month">
+        <span class="label-text req">ماه (YYYY-MM)</span>
+        <input id="month" name="month" type="month" required aria-describedby="monthHint">
+        <span id="monthHint" class="hint">مثلاً 2025-08</span>
+      </label>
+    </div>
+
+    <div class="pre-submit-note">برای تکمیل فرم روی دکمه «ثبت اطلاعات» کلیک کنید.</div>
+
+    <div class="actions">
+      <button id="submitBtn" type="submit">ثبت اطلاعات</button>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <div class="footer">
+      <span>© دیدار</span><span>•</span><a href="https://didar.me/" target="_blank" rel="noopener">didar.me</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('form');
+  const toast = document.getElementById('toast');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function showToast(type, msg){
+    toast.className = 'toast show ' + (type === 'success' ? 'success' : 'error');
+    toast.textContent = msg;
+  }
+
+  const msgs = {
+    required: 'لطفاً این فیلد را کامل کنید.',
+    url: 'لینک معتبر لینکدین وارد کنید (با https://www.linkedin.com/ شروع شود).',
+    number: 'عدد معتبر وارد کنید.',
+    min: (m) => `کمترین مقدار ${m} است.`
+  };
+
+  function validateField(el){
+    if(el.validity.valueMissing) return msgs.required;
+    if(el.name === 'post_url'){
+      const re = /^https?:\/\/(www\.)?linkedin\.com\/.+/i;
+      if(!re.test(el.value.trim())) return msgs.url;
+    }
+    if(el.type === 'number'){
+      if(el.validity.badInput) return msgs.number;
+      if(el.validity.stepMismatch || el.validity.rangeUnderflow){
+        const min = el.getAttribute('min') || '0';
+        return msgs.min(min);
+      }
+    }
+    return '';
+  }
+
+  function openSuccessPage(payload, serverText){
+    const summaryRows = [
+      ['نام', payload.get('full_name')],
+      ['ماه', payload.get('month')],
+      ['لینک پست', payload.get('post_url')],
+      ['لایک', payload.get('likes')],
+      ['کامنت', payload.get('comments')],
+      ['ری‌پست', payload.get('reposts')],
+      ['فالوئر', payload.get('followers')]
+    ].map(([k,v]) => `<tr><td>${k}</td><td>${v ?? ''}</td></tr>`).join('');
+
+    const html = `<!doctype html>
+<html lang="fa" dir="rtl">
+<meta charset="utf-8"><title>ثبت موفق | گزارش لینکدین</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--brand:#02AF9E;--ink:#0f172a;--line:#e5e7eb;--bg:#f8fafc}
+  body{margin:0;font-family:"Vazirmatn",system-ui;background:var(--bg);color:var(--ink);padding:32px}
+  .wrap{max-width:720px;margin:auto;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px rgba(2,175,158,.08);padding:24px}
+  h1{margin:0 0 6px;font-weight:800}
+  .ok{display:inline-block;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;border-radius:999px;padding:6px 10px;font-size:12px;margin:8px 0 14px}
+  table{width:100%;border-collapse:collapse}
+  td{padding:10px 12px;border-bottom:1px dashed var(--line)}
+  td:first-child{color:#64748b;width:30%}
+  .server{margin-top:14px;font-size:12px;color:#334155;background:#f1f5f9;border:1px dashed var(--line);border-radius:10px;padding:10px 12px}
+  .actions{margin-top:16px;display:flex;gap:8px}
+  a.btn{display:inline-block;text-decoration:none;background:linear-gradient(180deg,#02AF9E,#079c8e);color:#fff;padding:12px 14px;border-radius:12px;font-weight:800}
+</style>
+<div class="wrap">
+  <h1>ثبت موفق 👌</h1>
+  <div class="ok">اطلاعات شما با موفقیت ثبت شد</div>
+  <table>${summaryRows}</table>
+  ${serverText ? `<div class="server"><strong>پیام سرور:</strong> ${serverText}</div>` : ''}
+  <div class="actions">
+    <a class="btn" href="${location.href}" target="_self" rel="opener">بازگشت به فرم</a>
+  </div>
+</div>`;
+    const w = window.open('', '_blank');
+    if(!w){ showToast('success','ثبت شد. (پاپ‌آپ بلاک شد—اجازه‌ی باز شدن تب جدید را بدهید)'); return; }
+    w.document.open(); w.document.write(html); w.document.close();
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const fields = Array.from(form.querySelectorAll('input[required], select[required]'));
+    for(const el of fields){
+      const err = validateField(el);
+      if(err){
+        el.focus();
+        showToast('error', err);
+        return;
+      }
+    }
+
+    submitBtn.disabled = true;
+    showToast('success', 'در حال ارسال...');
+
+    try{
+      const fd = new FormData(form);
+      const params = new URLSearchParams(fd);
+
+      const resp = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString()
+      });
+
+      const text = await resp.text();
+
+      if(resp.ok){
+        openSuccessPage(fd, text);
+        form.reset();
+        toast.classList.remove('show');
+      } else {
+        showToast('error', text || 'در ثبت اطلاعات مشکلی رخ داد.');
+      }
+    }catch(err){
+      showToast('error', 'ارتباط برقرار نشد. لطفاً دوباره تلاش کنید.');
+    }finally{
+      submitBtn.disabled = false;
+    }
+  });
+
+  form.addEventListener('input', () => {
+    if(toast.classList.contains('show') && toast.classList.contains('error')){
+      toast.classList.remove('show');
+    }
+  });
+</script>
+</body>
+</html>
